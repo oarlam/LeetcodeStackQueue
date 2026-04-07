@@ -1,33 +1,59 @@
 class Node:
     def __init__(self, data= None, n=None):
         self.data= data
-        self.next = None
+        self.next = n
 
-class MyQueue:
+class Stack:
     def __init__(self):
         self.head = None
 
     def push(self, x: int) -> None:
-        if self.head is None:
-            self.head = Node(x)
-        else:
-            cur = self.head
-            while cur.next:
-                cur = cur.next
-            cur.next = Node(x)
+        new_node = Node(x)
+        new_node.next = self.head
+        self.head = new_node
 
     def pop(self) -> int:
+        if self.empty():
+            raise IndexError("pop from empty stack")
         data = self.head.data
         self.head = self.head.next
         return data
 
     def peek(self) -> int:
+        if self.empty():
+            raise IndexError("peek from empty stack")
         return self.head.data
 
     def empty(self) -> bool:
-        if self.head is None:
-            return True
-        return False
+        return self.head is None
+
+class MyQueue:
+    def __init__(self):
+        self.stack = Stack()
+
+    def push(self, x: int) -> None:
+        if self.stack.empty():
+            self.stack.push(x)
+        else:
+            s1 = self.stack
+            s2 = Stack()
+            while not s1.empty():
+                el = s1.pop()
+                s2.push(el)
+            s1.push(x)
+            while not s2.empty():
+                el = s2.pop()
+                s1.push(el)
+            self.stack = s1
+
+    def pop(self) -> int:
+        return self.stack.pop()
+
+    def peek(self) -> int:
+        return self.stack.head.data
+
+    def empty(self) -> bool:
+        return self.stack.empty()
 
 
 # Your MyQueue object will be instantiated and called as such:
